@@ -3,7 +3,7 @@
 Apicación android compilada con sdk 27 (Android 8.0 - Oreo)
 
 - Reproducción de frases de la película "El milagro de P. Tinto"
-- Añadir la frase elegida como tono de llamada, alarma o nitificación
+- Añadir la frase elegida como tono de llamada, alarma o notificación
 - Compartir la frase elegida
 
 ## Demo
