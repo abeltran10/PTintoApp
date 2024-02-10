@@ -36,7 +36,9 @@ public class FrasesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.activity_main, container, false);
         AppCompatActivity compat = (AppCompatActivity) this.actividad;
-        compat.setSupportActionBar((Toolbar) vista.findViewById(R.id.toolbar));
+        Toolbar toolbar = (Toolbar)  vista.findViewById(R.id.toolbar);
+        compat.setSupportActionBar(toolbar);
+        compat.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         compat.getSupportActionBar().setIcon(getResources().getIdentifier("icono", "mipmap", getActivity().getApplicationInfo().packageName));
         ListView listview = (ListView) vista.findViewById(android.R.id.list);
         listview.setAdapter(this.adaptador);
