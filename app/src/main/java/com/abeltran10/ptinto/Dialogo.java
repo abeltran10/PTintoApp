@@ -27,7 +27,7 @@ import java.util.Vector;
 public class Dialogo extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final String titulo = getArguments().getString("titulo");
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_Material_Dialog_Alert);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_Material_Dialog_NoActionBar);
         builder.setTitle(titulo);
         builder.setItems(new String[]{"Tono de llamada", "Tono de notificación", "Tono de alarma", "Compartir"}, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int posicion) {
@@ -87,10 +87,10 @@ public class Dialogo extends DialogFragment {
                     RingtoneManager.setActualDefaultRingtoneUri(getActivity().getApplicationContext(), 4, uri);
                     break;
             }
-            Toast.makeText(getActivity(), "Tono " + frase + " establecido", 0).show();
+            Toast.makeText(getActivity(), "Tono " + frase + " establecido", Toast.LENGTH_SHORT).show();
             return;
         }
-        Toast.makeText(getActivity(), "No se puede escribir en la SD card", 0).show();
+        Toast.makeText(getActivity(), "No se puede escribir en la SD card", Toast.LENGTH_SHORT).show();
     }
 
     public void escribirSDcard(File ruta, File archivo, String mp3) {
