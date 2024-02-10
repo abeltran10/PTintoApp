@@ -25,7 +25,6 @@
             <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
         </activity>
         <service android:label="Reproductor" android:name="com.abeltran10.ptinto.Reproductor"/>
-        <!--        <service android:label="PasadorImg" android:name="com.abeltran10.ptinto.PasadorImg"/>-->
         <provider android:name="android.support.v4.content.FileProvider" android:exported="false" android:authorities="com.tinto.p.ptinto.fileprovider" android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
         </provider>
