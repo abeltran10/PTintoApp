@@ -19,14 +19,15 @@ import android.widget.Toast;
 
 public class FrasesFragment extends Fragment {
     /* access modifiers changed from: private */
-    public Activity actividad;
+    private Activity actividad;
     private AdaptadorFrases adaptador;
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.actividad = activity;
         if (getArguments() != null) {
-            this.adaptador = new AdaptadorFrases(this.actividad.getApplication().getApplicationContext(), Frase.buscar(getArguments().getString("consulta")));
+            this.adaptador = new AdaptadorFrases(this.actividad.getApplication().getApplicationContext(),
+                    Frase.buscar(getArguments().getString("consulta")));
             return;
         }
         this.adaptador = ((Aplicacion) this.actividad.getApplication()).getAdaptador();
@@ -38,8 +39,9 @@ public class FrasesFragment extends Fragment {
         AppCompatActivity compat = (AppCompatActivity) this.actividad;
         Toolbar toolbar = (Toolbar)  vista.findViewById(R.id.toolbar);
         compat.setSupportActionBar(toolbar);
-        compat.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        compat.getSupportActionBar().setIcon(getResources().getIdentifier("icono", "mipmap", getActivity().getApplicationInfo().packageName));
+        compat.getSupportActionBar().setIcon(getResources().getIdentifier("icono",
+                "mipmap", getActivity().getApplicationInfo().packageName));
+
         ListView listview = (ListView) vista.findViewById(android.R.id.list);
         listview.setAdapter(this.adaptador);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

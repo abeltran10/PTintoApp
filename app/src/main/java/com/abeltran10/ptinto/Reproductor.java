@@ -10,7 +10,9 @@ public class Reproductor extends Service implements MediaPlayer.OnPreparedListen
     MediaPlayer mediaplayer = null;
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.mediaplayer = MediaPlayer.create(getApplicationContext(), getResources().getIdentifier(buscarFraseMp3(intent.getStringExtra("frase")), "raw", getApplicationInfo().packageName));
+        this.mediaplayer = MediaPlayer.create(getApplicationContext(), getResources()
+                .getIdentifier(buscarFraseMp3(intent.getStringExtra("frase")), "raw",
+                        getApplicationInfo().packageName));
         this.mediaplayer.setOnPreparedListener(this);
         return Service.START_STICKY;
     }

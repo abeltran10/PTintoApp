@@ -96,7 +96,8 @@ public class Dialogo extends DialogFragment {
     public void escribirSDcard(File ruta, File archivo, String mp3) {
         try {
             ruta.mkdirs();
-            InputStream is = getResources().openRawResource(getResources().getIdentifier(mp3, "raw", getActivity().getApplicationInfo().packageName));
+            InputStream is = getResources().openRawResource(getResources().getIdentifier(mp3,
+                    "raw", getActivity().getApplicationInfo().packageName));
             OutputStream os = new FileOutputStream(archivo);
             byte[] data = new byte[is.available()];
             is.read(data);
@@ -109,7 +110,8 @@ public class Dialogo extends DialogFragment {
     }
 
     public Uri insertarContent(File archivo, String audio, int tipo) {
-        Cursor mCursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, new String[]{"_id", "_data"}, "_data=?", new String[]{archivo.getAbsolutePath().toString()}, (String) null);
+        Cursor mCursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[]{"_id", "_data"}, "_data=?", new String[]{archivo.getAbsolutePath().toString()}, (String) null);
         if (mCursor == null || mCursor.getCount() < 1) {
             ContentValues values = new ContentValues();
             values.put("mime_type", "audio/mpeg3");
@@ -129,7 +131,8 @@ public class Dialogo extends DialogFragment {
             return getActivity().getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
         }
         mCursor.moveToNext();
-        return ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, (long) Integer.parseInt(mCursor.getString(mCursor.getColumnIndex("_id"))));
+        return ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                (long) Integer.parseInt(mCursor.getString(mCursor.getColumnIndex("_id"))));
     }
 
     public void compartirFrase(String frase) {
@@ -154,7 +157,7 @@ public class Dialogo extends DialogFragment {
         sendIntent.setAction("android.intent.action.SEND");
         sendIntent.putExtra("android.intent.extra.STREAM", uriMp3);
         sendIntent.setData(uriMp3);
-        sendIntent.setFlags(1);
+        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         sendIntent.setType("audio/mpeg3");
         startActivity(Intent.createChooser(sendIntent, frase));
     }

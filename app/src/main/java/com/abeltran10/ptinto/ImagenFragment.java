@@ -16,7 +16,8 @@ public class ImagenFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.imagen_layout, container, false);
         int pos = getArguments().getInt("posicion");
-        ((ImageView) vista.findViewById(R.id.imageView)).setImageResource(getResources().getIdentifier(new Imagen().getImg(pos), "drawable", getActivity().getApplicationInfo().packageName));
+        ((ImageView) vista.findViewById(R.id.imageView)).setImageResource(getResources().getIdentifier(new Imagen()
+                .getImg(pos), "drawable", getActivity().getApplicationInfo().packageName));
         return vista;
     }
 }
