@@ -78,30 +78,29 @@ public class Dialogo extends DialogFragment {
         }
         File archivo = new File(ruta, mp3 + ".mp3");
         if ("mounted".equals(Environment.getExternalStorageState())) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 escribirSDcard(ruta, archivo, mp3);
-            else
-                ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
-            Uri uri = insertarContent(archivo, audio, tipo);
+                Uri uri = insertarContent(archivo, audio, tipo);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.System.canWrite(getContext())) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getActivity().getApplicationInfo().packageName));
-                    startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.System.canWrite(getContext())) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getActivity().getApplicationInfo().packageName));
+                        startActivity(intent);
+                    } else {
+                        setRingstone(tipo, uri);
+                        Toast.makeText(getActivity(), "Tono " + frase + " establecido", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    setRingstone(tipo, uri);
-                    Toast.makeText(getActivity(), "Tono " + frase + " establecido", Toast.LENGTH_SHORT).show();
+                    if (ContextCompat
+                            .checkSelfPermission(getActivity(), Manifest.permission.WRITE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
+                        setRingstone(tipo, uri);
+                        Toast.makeText(getActivity(), "Tono " + frase + " establecido", Toast.LENGTH_SHORT).show();
+                    } else
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_SETTINGS}, 2);
                 }
-            } else {
-                if (ContextCompat
-                        .checkSelfPermission(getActivity(), Manifest.permission.WRITE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
-                    setRingstone(tipo, uri);
-                    Toast.makeText(getActivity(), "Tono " + frase + " establecido", Toast.LENGTH_SHORT).show();
-                    return;
-                } else
-                    ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.WRITE_SETTINGS}, 2);
-            }
+            } else
+                ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         }
 
