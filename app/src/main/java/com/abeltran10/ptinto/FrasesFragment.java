@@ -39,8 +39,7 @@ public class FrasesFragment extends Fragment {
         AppCompatActivity compat = (AppCompatActivity) this.actividad;
         Toolbar toolbar = (Toolbar)  vista.findViewById(R.id.toolbar);
         compat.setSupportActionBar(toolbar);
-        compat.getSupportActionBar().setIcon(getResources().getIdentifier("icono",
-                "mipmap", getActivity().getApplicationInfo().packageName));
+//        compat.getSupportActionBar()();
 
         ListView listview = (ListView) vista.findViewById(android.R.id.list);
         listview.setAdapter(this.adaptador);
