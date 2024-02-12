@@ -49,7 +49,7 @@ public class Dialogo extends DialogFragment {
 
     public void establecerTono(String frase, int tipo) {
         File ruta;
-        Vector<Frase> listadoFrases = Frase.listaFrases();
+        Vector<Frase> listadoFrases = Frase.listaFrases;
         String audio = "";
         String mp3 = "";
         int i = 0;
@@ -149,7 +149,7 @@ public class Dialogo extends DialogFragment {
     }
 
     public void compartirFrase(String frase) {
-        Vector<Frase> listadoFrases = Frase.listaFrases();
+        Vector<Frase> listadoFrases = Frase.listaFrases;
         String mp3 = "";
         int i = 0;
         while (i < listadoFrases.size()) {

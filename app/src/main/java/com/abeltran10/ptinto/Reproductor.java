@@ -32,7 +32,7 @@ public class Reproductor extends Service implements MediaPlayer.OnPreparedListen
     }
 
     public String buscarFraseMp3(String frase) {
-        Vector<Frase> listFrase = Frase.listaFrases();
+        Vector<Frase> listFrase = Frase.listaFrases;
         for (int i = 0; i < listFrase.size(); i++) {
             if (frase.equals(listFrase.elementAt(i).frase)) {
                 return "" + listFrase.elementAt(i).mp3;

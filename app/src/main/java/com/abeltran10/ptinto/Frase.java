@@ -5,6 +5,7 @@ import java.util.Vector;
 public class Frase {
     public String frase;
     public String mp3;
+    public static final Vector<Frase> listaFrases = listaFrases();
 
     public Frase(String frase2, String mp32) {
         this.frase = frase2;
@@ -81,7 +82,7 @@ public class Frase {
 
     public static Vector<Frase> buscar(String consulta) {
         Vector<Frase> resultado = new Vector<>();
-        Vector<Frase> frases = listaFrases();
+        Vector<Frase> frases = listaFrases;
         for (int i = 0; i < frases.size(); i++) {
             if (frases.elementAt(i).frase.toLowerCase().contains(consulta.toLowerCase())) {
                 resultado.add(new Frase(frases.elementAt(i).frase, frases.elementAt(i).mp3));

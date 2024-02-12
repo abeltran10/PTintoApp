@@ -9,7 +9,7 @@ public class Aplicacion extends Application {
 
     public void onCreate() {
         super.onCreate();
-        this.listaFrases = Frase.listaFrases();
+        this.listaFrases = Frase.listaFrases;
         this.adaptador = new AdaptadorFrases(this, this.listaFrases);
     }
 
