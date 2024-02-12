@@ -152,15 +152,13 @@ public class Dialogo extends DialogFragment {
         Vector<Frase> listadoFrases = Frase.listaFrases();
         String mp3 = "";
         int i = 0;
-        while (true) {
-            if (i >= listadoFrases.size()) {
-                break;
-            } else if (listadoFrases.elementAt(i).frase.equals(frase)) {
+        while (i < listadoFrases.size()) {
+            if (listadoFrases.elementAt(i).frase.equals(frase)) {
                 mp3 = listadoFrases.elementAt(i).mp3;
                 break;
-            } else {
-                i++;
             }
+
+            ++i;
         }
         File ruta = new File(getActivity().getCacheDir(), "ptinto_compartido");
         File archivo = new File(ruta, mp3 + ".mp3");
