@@ -20,7 +20,7 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
-    Vector<MyAsyncTask> tareas = new Vector<>();
+    private Vector<MyAsyncTask> tareas = new Vector<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

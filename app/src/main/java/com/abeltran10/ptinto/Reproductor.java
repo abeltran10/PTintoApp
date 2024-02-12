@@ -7,7 +7,7 @@ import android.os.IBinder;
 import java.util.Vector;
 
 public class Reproductor extends Service implements MediaPlayer.OnPreparedListener {
-    MediaPlayer mediaplayer = null;
+    private MediaPlayer mediaplayer = null;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

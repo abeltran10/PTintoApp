@@ -10,7 +10,7 @@ import java.util.Vector;
 
 public class AdaptadorFrases extends BaseAdapter {
     private LayoutInflater inflador;
-    protected Vector<Frase> listaFrases;
+    private Vector<Frase> listaFrases;
 
     public AdaptadorFrases(Context contexto, Vector<Frase> listaFrases2) {
         this.inflador = (LayoutInflater) contexto.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
