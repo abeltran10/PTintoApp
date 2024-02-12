@@ -12,7 +12,7 @@ public class Frase {
         this.mp3 = mp32;
     }
 
-    public static Vector<Frase> listaFrases() {
+    private static Vector<Frase> listaFrases() {
         Vector<Frase> frases = new Vector<>();
         frases.add(new Frase("Abducido", "abducido"));
         frases.add(new Frase("Alayuyu", "alayuyu"));
