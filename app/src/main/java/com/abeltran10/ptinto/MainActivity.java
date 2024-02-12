@@ -22,8 +22,8 @@ import java.util.Vector;
 public class MainActivity extends AppCompatActivity {
     Vector<MyAsyncTask> tareas = new Vector<>();
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView((int) R.layout.frame_layout);
         getSupportFragmentManager().beginTransaction().add((int) R.id.frame_container, (Fragment) new FrasesFragment()).commit();
@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
         this.tareas.elementAt(0).execute(new Integer[0]);
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    @Override
+    protected void onPause() {
         if (!this.tareas.isEmpty()) {
             this.tareas.elementAt(0).cancel(true);
             this.tareas.remove(0);
@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         if (this.tareas.isEmpty()) {
             this.tareas.add(new MyAsyncTask());
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_buscar));
@@ -68,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public void onNewIntent(Intent intent) {
+    @Override
+    protected void onNewIntent(Intent intent) {
         if (intent.getAction() != null && intent.getAction().equals("android.intent.action.SEARCH")) {
             String consulta = intent.getStringExtra("query");
             FrasesFragment f = new FrasesFragment();
@@ -80,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onStop() {
+    @Override
+    protected void onStop() {
         if (!this.tareas.isEmpty()) {
             this.tareas.elementAt(0).cancel(true);
             this.tareas.remove(0);
@@ -90,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestart() {
+    @Override
+    protected void onRestart() {
         super.onRestart();
         if (this.tareas.isEmpty()) {
             this.tareas.add(new MyAsyncTask());
@@ -99,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    @Override
+    protected void onDestroy() {
         if (!this.tareas.isEmpty()) {
             this.tareas.elementAt(0).cancel(true);
             this.tareas.remove(0);
@@ -113,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
         MyAsyncTask() {
         }
 
-        /* access modifiers changed from: protected */
-        public Integer doInBackground(Integer... params) {
+        @Override
+        protected Integer doInBackground(Integer... params) {
             new Timer().scheduleAtFixedRate(new TimerTask() {
                 public void run() {
                     if (!MyAsyncTask.this.isCancelled()) {

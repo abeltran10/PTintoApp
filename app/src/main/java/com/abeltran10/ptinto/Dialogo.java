@@ -31,6 +31,8 @@ import java.io.OutputStream;
 import java.util.Vector;
 
 public class Dialogo extends DialogFragment {
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final String titulo = getArguments().getString("titulo");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_Material_Dialog_NoActionBar);
@@ -49,7 +51,7 @@ public class Dialogo extends DialogFragment {
 
     public void establecerTono(String frase, int tipo) {
         File ruta;
-        Vector<Frase> listadoFrases = Frase.listaFrases;
+        Vector<Frase> listadoFrases = ((Aplicacion)getActivity().getApplication()).getListaFrases();
         String audio = "";
         String mp3 = "";
         int i = 0;
@@ -149,7 +151,7 @@ public class Dialogo extends DialogFragment {
     }
 
     public void compartirFrase(String frase) {
-        Vector<Frase> listadoFrases = Frase.listaFrases;
+        Vector<Frase> listadoFrases = ((Aplicacion)getActivity().getApplication()).getListaFrases();
         String mp3 = "";
         int i = 0;
         while (i < listadoFrases.size()) {

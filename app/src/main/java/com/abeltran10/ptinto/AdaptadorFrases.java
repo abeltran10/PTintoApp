@@ -13,7 +13,7 @@ public class AdaptadorFrases extends BaseAdapter {
     protected Vector<Frase> listaFrases;
 
     public AdaptadorFrases(Context contexto, Vector<Frase> listaFrases2) {
-        this.inflador = (LayoutInflater) contexto.getSystemService("layout_inflater");
+        this.inflador = (LayoutInflater) contexto.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.listaFrases = listaFrases2;
     }
 

@@ -18,28 +18,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class FrasesFragment extends Fragment {
-    /* access modifiers changed from: private */
+
     private Activity actividad;
     private AdaptadorFrases adaptador;
 
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.actividad = activity;
         if (getArguments() != null) {
             this.adaptador = new AdaptadorFrases(this.actividad.getApplication().getApplicationContext(),
-                    Frase.buscar(getArguments().getString("consulta")));
+                    Frase.buscar(getArguments().getString("consulta"), ((Aplicacion) this.actividad.getApplication()).getListaFrases()));
             return;
         }
         this.adaptador = ((Aplicacion) this.actividad.getApplication()).getAdaptador();
     }
 
     @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.activity_main, container, false);
         AppCompatActivity compat = (AppCompatActivity) this.actividad;
         Toolbar toolbar = (Toolbar)  vista.findViewById(R.id.toolbar);
         compat.setSupportActionBar(toolbar);
-//        compat.getSupportActionBar()();
 
         ListView listview = (ListView) vista.findViewById(android.R.id.list);
         listview.setAdapter(this.adaptador);

@@ -9,6 +9,7 @@ import java.util.Vector;
 public class Reproductor extends Service implements MediaPlayer.OnPreparedListener {
     MediaPlayer mediaplayer = null;
 
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         this.mediaplayer = MediaPlayer.create(getApplicationContext(), getResources()
                 .getIdentifier(buscarFraseMp3(intent.getStringExtra("frase")), "raw",
@@ -17,25 +18,28 @@ public class Reproductor extends Service implements MediaPlayer.OnPreparedListen
         return Service.START_STICKY;
     }
 
+    @Override
     public void onPrepared(MediaPlayer player) {
         player.start();
     }
 
-
+    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    @Override
     public void onDestroy() {
         this.mediaplayer.stop();
         super.onDestroy();
     }
 
+
     public String buscarFraseMp3(String frase) {
-        Vector<Frase> listFrase = Frase.listaFrases;
+        Vector<Frase> listFrase = ((Aplicacion)getApplication()).getListaFrases();
         for (int i = 0; i < listFrase.size(); i++) {
             if (frase.equals(listFrase.elementAt(i).frase)) {
-                return "" + listFrase.elementAt(i).mp3;
+                return listFrase.elementAt(i).mp3;
             }
         }
         return "";
