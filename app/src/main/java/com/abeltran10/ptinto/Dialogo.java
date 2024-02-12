@@ -1,17 +1,23 @@
 package com.abeltran10.ptinto;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -47,16 +53,14 @@ public class Dialogo extends DialogFragment {
         String audio = "";
         String mp3 = "";
         int i = 0;
-        while (true) {
-            if (i >= listadoFrases.size()) {
-                break;
-            } else if (listadoFrases.elementAt(i).frase.equals(frase)) {
+        while (i < listadoFrases.size()) {
+            if (listadoFrases.elementAt(i).frase.equals(frase)) {
                 audio = listadoFrases.elementAt(i).frase;
                 mp3 = listadoFrases.elementAt(i).mp3;
                 break;
-            } else {
-                i++;
             }
+
+            ++i;
         }
         switch (tipo) {
             case 0:
@@ -74,23 +78,33 @@ public class Dialogo extends DialogFragment {
         }
         File archivo = new File(ruta, mp3 + ".mp3");
         if ("mounted".equals(Environment.getExternalStorageState())) {
-            escribirSDcard(ruta, archivo, mp3);
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                escribirSDcard(ruta, archivo, mp3);
+            else
+                ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
             Uri uri = insertarContent(archivo, audio, tipo);
-            switch (tipo) {
-                case 0:
-                    RingtoneManager.setActualDefaultRingtoneUri(getActivity().getApplicationContext(), 1, uri);
-                    break;
-                case 1:
-                    RingtoneManager.setActualDefaultRingtoneUri(getActivity().getApplicationContext(), 2, uri);
-                    break;
-                case 2:
-                    RingtoneManager.setActualDefaultRingtoneUri(getActivity().getApplicationContext(), 4, uri);
-                    break;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.System.canWrite(getContext())) {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getActivity().getApplicationInfo().packageName));
+                    startActivity(intent);
+                } else {
+                    setRingstone(tipo, uri);
+                    Toast.makeText(getActivity(), "Tono " + frase + " establecido", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                if (ContextCompat
+                        .checkSelfPermission(getActivity(), Manifest.permission.WRITE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
+                    setRingstone(tipo, uri);
+                    Toast.makeText(getActivity(), "Tono " + frase + " establecido", Toast.LENGTH_SHORT).show();
+                    return;
+                } else
+                    ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.WRITE_SETTINGS}, 2);
             }
-            Toast.makeText(getActivity(), "Tono " + frase + " establecido", Toast.LENGTH_SHORT).show();
-            return;
+
         }
-        Toast.makeText(getActivity(), "No se puede escribir en la SD card", Toast.LENGTH_SHORT).show();
+
     }
 
     public void escribirSDcard(File ruta, File archivo, String mp3) {
@@ -161,4 +175,20 @@ public class Dialogo extends DialogFragment {
         sendIntent.setType("audio/mpeg3");
         startActivity(Intent.createChooser(sendIntent, frase));
     }
+
+    void setRingstone (int tipo, Uri uri) {
+        switch (tipo) {
+            case 0:
+                RingtoneManager.setActualDefaultRingtoneUri(getActivity().getApplicationContext(), RingtoneManager.TYPE_RINGTONE, uri);
+                break;
+            case 1:
+                RingtoneManager.setActualDefaultRingtoneUri(getActivity().getApplicationContext(), RingtoneManager.TYPE_NOTIFICATION, uri);
+                break;
+            case 2:
+                RingtoneManager.setActualDefaultRingtoneUri(getActivity().getApplicationContext(), RingtoneManager.TYPE_ALARM, uri);
+                break;
+        }
+
+    }
+
 }
