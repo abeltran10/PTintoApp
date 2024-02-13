@@ -129,7 +129,7 @@ public class Dialogo extends DialogFragment {
                 new String[]{"_id", "_data"}, "_data=?", new String[]{archivo.getAbsolutePath().toString()}, (String) null);
         if (mCursor == null || mCursor.getCount() < 1) {
             ContentValues values = new ContentValues();
-            values.put("mime_type", "audio/mpeg3");
+            values.put("mime_type", "audio/mpeg");
             values.put("title", audio);
             values.put("_data", archivo.getAbsolutePath());
             switch (tipo) {
@@ -171,7 +171,7 @@ public class Dialogo extends DialogFragment {
         sendIntent.putExtra("android.intent.extra.STREAM", uriMp3);
         sendIntent.setData(uriMp3);
         sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        sendIntent.setType("audio/mpeg3");
+        sendIntent.setType("audio/mpeg");
         startActivity(Intent.createChooser(sendIntent, frase));
     }
 
