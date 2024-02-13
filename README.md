@@ -13,7 +13,7 @@ Para instalar la app necesitas dar permiso para instalar desde origenes desconoc
 - La app necesita permiso para gestionar contenido multimedia
 - La app necesita permiso para editar los tonos
 
-[PTintoApp.apk](https://github.com/abeltran10/PTintoApp/blob/master/app/apk/PTintoApp.apk)
+[PTintoApp.apk](https://github.com/abeltran10/PTintoApp/tree/master/app/apk)
 
 ## Demo
 [Demo PTintoApp.webm](https://github.com/abeltran10/PTintoApp/assets/44783052/b6be8198-7cf4-444e-aef0-1578afd08713)
