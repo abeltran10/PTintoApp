@@ -25,23 +25,45 @@ import java.io.OutputStream;
 public class ToneManager {
 
     public static void aplicarTono(Context context, Frase frase, int tipo) {
+        // 1. Obtener el recurso raw
         int resId = context.getResources().getIdentifier(frase.getMp3(), "raw", context.getPackageName());
-        File archivoDestino = copiarArchivoDesdeRaw(context, resId, frase.getMp3());
 
-        // Ejemplo de inserción moderna (Concepto)
+        // 2. Definir los valores del tono
         ContentValues values = new ContentValues();
-        values.put(MediaStore.MediaColumns.DATA, archivoDestino.getAbsolutePath());
-        values.put(MediaStore.Audio.Media.TITLE, frase.getFrase());
-        values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/mpeg");
+        values.put(MediaStore.MediaColumns.TITLE, frase.getFrase());
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mpeg");
         values.put(MediaStore.Audio.Media.IS_RINGTONE, tipo == 0);
         values.put(MediaStore.Audio.Media.IS_NOTIFICATION, tipo == 1);
         values.put(MediaStore.Audio.Media.IS_ALARM, tipo == 2);
+        // IMPORTANTE: Esto le dice al sistema que el archivo es nuestro
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_RINGTONES);
+        values.put(MediaStore.MediaColumns.IS_PENDING, 1); // Indicar que estamos escribiendo
 
         Uri uri = context.getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
 
         if (uri != null) {
-            RingtoneManager.setActualDefaultRingtoneUri(context, getRingtoneType(tipo), uri);
-            Toast.makeText(context, "Tono establecido", Toast.LENGTH_SHORT).show();
+            try (OutputStream out = context.getContentResolver().openOutputStream(uri);
+                 InputStream in = context.getResources().openRawResource(resId)) {
+
+                // Copiar datos
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, length);
+                }
+
+                // Finalizar la escritura
+                values.clear();
+                values.put(MediaStore.MediaColumns.IS_PENDING, 0);
+                context.getContentResolver().update(uri, values, null, null);
+
+                // Establecer el tono
+                RingtoneManager.setActualDefaultRingtoneUri(context, getRingtoneType(tipo), uri);
+                Toast.makeText(context, "Tono establecido", Toast.LENGTH_SHORT).show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
