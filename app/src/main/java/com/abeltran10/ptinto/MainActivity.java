@@ -67,9 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    searchView.clearFocus();
-                    handleSearch(newText);
-                    return true;
+                    return false;
                 }
             });
         }
