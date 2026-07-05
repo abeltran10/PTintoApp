@@ -20,13 +20,12 @@ public class Dialogo extends DialogFragment {
                 .setTitle(titulo)
                 .setItems(new String[]{"Tono llamada", "Tono notificación", "Tono alarma", "Compartir"}, (dialog, pos) -> {
                     Frase encontrada = FraseRepository.buscarPorNombre(titulo);
-                    // Delegamos toda la lógica técnica al ToneManager
-                    if (pos == 3) {
-                        if (encontrada != null) {
+
+                    if (encontrada != null) {
+                        // Delegamos toda la lógica técnica al ToneManager
+                        if (pos == 3) {
                             ToneManager.compartirFrase(requireContext(), encontrada.getMp3());
-                        }
-                    } else {
-                        if (encontrada != null) {
+                        } else {
                             ToneManager.aplicarTono(requireContext(), encontrada, pos);
                         }
                     }
