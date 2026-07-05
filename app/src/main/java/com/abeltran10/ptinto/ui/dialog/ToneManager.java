@@ -3,6 +3,7 @@ package com.abeltran10.ptinto.ui.dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Environment;
@@ -24,11 +25,12 @@ import java.io.OutputStream;
 public class ToneManager {
 
     public static void aplicarTono(Context context, Frase frase, int tipo) {
-        // 1. Usar MediaStore para registrar el audio (Forma moderna)
-        // 2. Usar ContentResolver para insertar los metadatos
+        int resId = context.getResources().getIdentifier(frase.getMp3(), "raw", context.getPackageName());
+        File archivoDestino = copiarArchivoDesdeRaw(context, resId, frase.getMp3());
 
         // Ejemplo de inserción moderna (Concepto)
         ContentValues values = new ContentValues();
+        values.put(MediaStore.MediaColumns.DATA, archivoDestino.getAbsolutePath());
         values.put(MediaStore.Audio.Media.TITLE, frase.getFrase());
         values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/mpeg");
         values.put(MediaStore.Audio.Media.IS_RINGTONE, tipo == 0);
