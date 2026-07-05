@@ -52,8 +52,6 @@ public class ToneManager {
                     out.write(buffer, 0, length);
                 }
 
-                // Finalizar la escritura
-                values.clear();
                 values.put(MediaStore.MediaColumns.IS_PENDING, 0);
                 context.getContentResolver().update(uri, values, null, null);
 
