@@ -1,134 +1,105 @@
 package com.abeltran10.ptinto;
 
-import android.support.v4.app.Fragment;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
+import android.view.MenuItem;
 
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
+import com.abeltran10.ptinto.ui.main.FrasesFragment;
+import com.abeltran10.ptinto.ui.main.ImagenFragment;
+import com.abeltran10.ptinto.ui.main.MainViewModel;
+import com.abeltran10.ptinto.player.Reproductor;
 
 public class MainActivity extends AppCompatActivity {
-    private Vector<MyAsyncTask> tareas = new Vector<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView((int) R.layout.frame_layout);
-        getSupportFragmentManager().beginTransaction().add((int) R.id.frame_container, (Fragment) new FrasesFragment()).commit();
-        this.tareas.add(new MyAsyncTask());
-        this.tareas.elementAt(0).execute(new Integer[0]);
-    }
+        setContentView(R.layout.activity_main);
 
-    @Override
-    protected void onPause() {
-        if (!this.tareas.isEmpty()) {
-            this.tareas.elementAt(0).cancel(true);
-            this.tareas.remove(0);
-        }
-        super.onPause();
-    }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (this.tareas.isEmpty()) {
-            this.tareas.add(new MyAsyncTask());
-            this.tareas.elementAt(0).execute(new Integer[0]);
+        // Esto es lo que pone el título de la App en la toolbar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
         }
+
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        // 1. Carga inicial de la lista si es necesario
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame_container, new FrasesFragment())
+                    .commit();
+        }
+
+        // 2. Observar cambios de imagen
+        viewModel.getImagePosition().observe(this, pos -> {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.image_fragment, ImagenFragment.newInstance(pos))
+                    .commit();
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_buscar));
-        searchView.setSearchableInfo(((SearchManager) getSystemService(Context.SEARCH_SERVICE)).getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            public boolean onQueryTextSubmit(String query) {
-                searchView.setIconified(true);
-                searchView.clearFocus();
-                searchView.onActionViewCollapsed();
-                return false;
-            }
 
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+        MenuItem searchItem = menu.findItem(R.id.menu_buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchView.clearFocus();
+                    handleSearch(query);
+                    return true;
+                }
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    searchView.clearFocus();
+                    handleSearch(newText);
+                    return true;
+                }
+            });
+        }
         return true;
+    }
+
+    private void handleSearch(String consulta) {
+        FrasesFragment f = new FrasesFragment();
+        Bundle args = new Bundle();
+        args.putString("consulta", consulta);
+        f.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame_container, f)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (intent.getAction() != null && intent.getAction().equals("android.intent.action.SEARCH")) {
-            String consulta = intent.getStringExtra("query");
-            FrasesFragment f = new FrasesFragment();
-            Bundle args = new Bundle();
-            args.putString("consulta", consulta);
-            f.setArguments(args);
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, f).addToBackStack((String) null).commit();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        if (!this.tareas.isEmpty()) {
-            this.tareas.elementAt(0).cancel(true);
-            this.tareas.remove(0);
-        }
-        stopService(new Intent(this, Reproductor.class));
-        super.onStop();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (this.tareas.isEmpty()) {
-            this.tareas.add(new MyAsyncTask());
-            this.tareas.elementAt(0).execute(new Integer[0]);
+        super.onNewIntent(intent);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            handleSearch(intent.getStringExtra(SearchManager.QUERY));
         }
     }
 
     @Override
     protected void onDestroy() {
-        if (!this.tareas.isEmpty()) {
-            this.tareas.elementAt(0).cancel(true);
-            this.tareas.remove(0);
-        }
+        // Unificar parada de servicios aquí es suficiente
         stopService(new Intent(this, Reproductor.class));
         super.onDestroy();
-    }
-
-    class MyAsyncTask extends AsyncTask<Integer, Integer, Integer> {
-        MyAsyncTask() {
-        }
-
-        @Override
-        protected Integer doInBackground(Integer... params) {
-            new Timer().scheduleAtFixedRate(new TimerTask() {
-                public void run() {
-                    if (!MyAsyncTask.this.isCancelled()) {
-                        int pos = new Random().nextInt(15);
-                        ImagenFragment i = new ImagenFragment();
-                        Bundle args = new Bundle();
-                        args.putInt("posicion", pos);
-                        i.setArguments(args);
-                        MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.image_fragment, i).commit();
-                    }
-                }
-            }, 0, 5000);
-            return null;
-        }
     }
 }
