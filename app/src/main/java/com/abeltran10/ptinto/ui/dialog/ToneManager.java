@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
@@ -43,10 +44,9 @@ public class ToneManager {
     }
 
     private static File copiarArchivoDesdeRaw(Context context, int resId, String nombreArchivo) {
-        File carpetaCache = new File(context.getCacheDir(), "ptinto_compartido");
-        if (!carpetaCache.exists()) carpetaCache.mkdirs();
-
-        File archivoDestino = new File(carpetaCache, nombreArchivo);
+        File carpetaTonos = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES);
+        if (!carpetaTonos.exists()) carpetaTonos.mkdirs();
+        File archivoDestino = new File(carpetaTonos, nombreArchivo);
 
         try (InputStream in = context.getResources().openRawResource(resId);
              OutputStream out = new FileOutputStream(archivoDestino)) {
