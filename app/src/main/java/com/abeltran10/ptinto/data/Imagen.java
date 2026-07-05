@@ -1,4 +1,4 @@
-package com.abeltran10.ptinto;
+package com.abeltran10.ptinto.data;
 
 public class Imagen {
     private String[] img = {"automatico", "familia", "la_litro", "logo", "los_dos", "mariconasos",
