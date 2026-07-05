@@ -16,6 +16,7 @@ import com.abeltran10.ptinto.data.FraseRepository;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -41,43 +42,46 @@ public class ToneManager {
         }
     }
 
-    public static void compartirFrase(Context context, String nombreFrase) {
-        Frase f = FraseRepository.buscarPorNombre(nombreFrase);
-        if (f == null) return;
+    private static File copiarArchivoDesdeRaw(Context context, int resId, String nombreArchivo) {
+        File carpetaCache = new File(context.getCacheDir(), "ptinto_compartido");
+        if (!carpetaCache.exists()) carpetaCache.mkdirs();
 
-        File cachePath = new File(context.getCacheDir(), "compartir");
-        if (!cachePath.exists()) cachePath.mkdirs();
-        File archivo = new File(cachePath, f.getMp3() + ".mp3");
+        File archivoDestino = new File(carpetaCache, nombreArchivo);
 
-        try {
-            // Obtenemos el ID del recurso de forma segura usando el nombre del mp3
-            int resId = context.getResources().getIdentifier(f.getMp3(), "raw", context.getPackageName());
+        try (InputStream in = context.getResources().openRawResource(resId);
+             OutputStream out = new FileOutputStream(archivoDestino)) {
 
-            // Copiamos el archivo usando un buffer (más eficiente que is.available())
-            try (InputStream is = context.getResources().openRawResource(resId);
-                 OutputStream os = new FileOutputStream(archivo)) {
-
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = is.read(buffer)) > 0) {
-                    os.write(buffer, 0, length);
-                }
-                os.flush();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = in.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
             }
+            return archivoDestino;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-            // Crear URI con FileProvider
+    // Dentro de tu clase ToneManager
+    public static void compartirFrase(Context context, String nombreArchivo) {
+       int resId = context.getResources().getIdentifier(nombreArchivo, "raw", context.getPackageName());
+
+        // 1. Extraemos el archivo a un sitio accesible
+        File archivoTemporal = copiarArchivoDesdeRaw(context, resId, nombreArchivo);
+
+        if (archivoTemporal != null) {
+            // 2. Ahora sí usamos el FileProvider con el archivo físico extraído
             Uri uri = FileProvider.getUriForFile(context,
-                    context.getPackageName() + ".fileprovider", archivo);
+                    context.getPackageName() + ".fileprovider",
+                    archivoTemporal);
 
-            // Lanzar Intent de compartir
+            // 3. Lanzamos el Intent de compartir
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("audio/mpeg");
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            context.startActivity(Intent.createChooser(intent, "Compartir con"));
-
-        } catch (Exception e) {
-            Log.e("ToneManager", "Error al preparar archivo para compartir", e);
+            context.startActivity(Intent.createChooser(intent, "Compartir vía"));
         }
     }
 
