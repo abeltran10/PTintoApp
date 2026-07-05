@@ -24,7 +24,7 @@ public class Dialogo extends DialogFragment {
                     if (encontrada != null) {
                         // Delegamos toda la lógica técnica al ToneManager
                         if (pos == 3) {
-                            ToneManager.compartirFrase(requireContext(), encontrada.getMp3());
+                            ToneManager.compartirFrase(requireContext(), encontrada);
                         } else {
                             ToneManager.aplicarTono(requireContext(), encontrada, pos);
                         }

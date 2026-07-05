@@ -64,11 +64,11 @@ public class ToneManager {
     }
 
     // Dentro de tu clase ToneManager
-    public static void compartirFrase(Context context, String nombreArchivo) {
-       int resId = context.getResources().getIdentifier(nombreArchivo, "raw", context.getPackageName());
+    public static void compartirFrase(Context context, Frase frase) {
+       int resId = context.getResources().getIdentifier(frase.getMp3(), "raw", context.getPackageName());
 
         // 1. Extraemos el archivo a un sitio accesible
-        File archivoTemporal = copiarArchivoDesdeRaw(context, resId, nombreArchivo);
+        File archivoTemporal = copiarArchivoDesdeRaw(context, resId, frase.getMp3());
 
         if (archivoTemporal != null) {
             // 2. Ahora sí usamos el FileProvider con el archivo físico extraído
