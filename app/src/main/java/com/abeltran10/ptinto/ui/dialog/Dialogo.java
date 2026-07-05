@@ -1,7 +1,11 @@
 package com.abeltran10.ptinto.ui.dialog;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -26,7 +30,15 @@ public class Dialogo extends DialogFragment {
                         if (pos == 3) {
                             ToneManager.compartirFrase(requireContext(), encontrada);
                         } else {
-                            ToneManager.aplicarTono(requireContext(), encontrada, pos);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(requireContext())) {
+                                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                                    intent.setData(Uri.parse("package:" + requireContext().getPackageName()));
+                                    requireContext().startActivity(intent);
+                            } else {
+                                ToneManager.aplicarTono(requireContext(), encontrada, pos);
+                            }
+
+
                         }
                     }
                 })
