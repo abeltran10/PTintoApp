@@ -1,6 +1,6 @@
 ## PTintoApp
 
-Apicación android compilada con sdk 21, compatible con el 99% de los dispositivos actuales.
+Aplicación android compilada con sdk 21, compatible con el 99% de los dispositivos actuales.
 
 - Reproducción de frases de la película "El milagro de P. Tinto"
 - Añadir la frase elegida como tono de llamada, alarma o notificación
