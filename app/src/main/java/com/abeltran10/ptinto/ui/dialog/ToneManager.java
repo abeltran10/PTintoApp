@@ -30,6 +30,7 @@ public class ToneManager {
 
         // 2. Definir los valores del tono
         ContentValues values = new ContentValues();
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, frase.getMp3() + ".mp3");
         values.put(MediaStore.MediaColumns.TITLE, frase.getFrase());
         values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mpeg");
         values.put(MediaStore.Audio.Media.IS_RINGTONE, tipo == 0);
