@@ -2,6 +2,7 @@ package com.abeltran10.ptinto.ui.main;
 
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 
@@ -12,7 +13,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +54,14 @@ public class FrasesFragment extends Fragment {
         // 2. Configurar RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        // Crear el separador con un estilo nativo del sistema
+        DividerItemDecoration divider = new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL);
+        Drawable drawable = ContextCompat.getDrawable(requireContext(), android.R.drawable.divider_horizontal_bright);
+        if (drawable != null) {
+            divider.setDrawable(drawable);
+        }
+        recyclerView.addItemDecoration(divider);
 
         // 3. Crear adaptador y asignar
         adaptador = new AdaptadorFrases(listaFrases, createClickListener());
