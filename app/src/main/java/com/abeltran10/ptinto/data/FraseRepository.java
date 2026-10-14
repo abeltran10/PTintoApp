@@ -85,41 +85,27 @@ public class FraseRepository {
             return getListaFrases();
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // Opción moderna para API 24+
-            return listaFrases.stream()
-                    .filter(f -> f.getFrase().toLowerCase().contains(query.toLowerCase()))
-                    .collect(Collectors.toList());
-        } else {
-            // Opción tradicional para versiones antiguas
-            List<Frase> resultados = new ArrayList<>();
-            String queryLower = query.toLowerCase();
+        // Opción tradicional para versiones antiguas
+        List<Frase> resultados = new ArrayList<>();
+        String queryLower = query.toLowerCase();
 
-            for (Frase f : listaFrases) {
-                if (f.getFrase().toLowerCase().contains(queryLower)) {
-                    resultados.add(f);
-                }
+        for (Frase f : listaFrases) {
+            if (f.getFrase().toLowerCase().contains(queryLower)) {
+                resultados.add(f);
             }
-            return resultados;
         }
+        return resultados;
+
     }
 
     public static Frase buscarPorNombre(String nombre) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // Búsqueda moderna usando Stream API (disponible desde API 24)
-            return listaFrases.stream()
-                    .filter(f -> f.getFrase().equals(nombre))
-                    .findFirst()
-                    .orElse(null);
-        } else {
-            // Búsqueda tradicional para versiones anteriores (API < 24)
+        // Búsqueda tradicional para versiones anteriores (API < 24)
             for (Frase f : listaFrases) {
                 if (f.getFrase().equals(nombre)) {
                     return f;
                 }
             }
             return null;
-        }
     }
 }
 

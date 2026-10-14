@@ -3,15 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    >
 
     <TextView
         android:id="@+id/frase"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
+        android:layout_height="match_parent"
+        android:gravity="left"
         android:textColor="#ffffff"
-        android:textSize="18sp"
-        android:text="Titulo" />
+        android:textSize="18dp"
+        android:text="Titulo"
+        android:padding="8dp"/>
 
 </LinearLayout>
